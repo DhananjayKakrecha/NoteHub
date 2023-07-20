@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	id="WebApp_ID" version="3.1">
+	<display-name>Test2</display-name>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+	</welcome-file-list>
+
+	<servlet>
+		<servlet-name>DownloadServlet</servlet-name>
+		<servlet-class>com.download.DownloadServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DownloadServlet</servlet-name>
+		<url-pattern>/download</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>LoginServlet</servlet-name>
+		<servlet-class>com.login.LoginServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LoginServlet</servlet-name>
+		<url-pattern>/login</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>PinServlet</servlet-name>
+		<servlet-class>com.download.PinServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PinServlet</servlet-name>
+		<url-pattern>/pin</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>LabelPin</servlet-name>
+		<servlet-class>com.download.LabelPin</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LabelPin</servlet-name>
+		<url-pattern>/labelPin</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>RegisterUserServlet</servlet-name>
+		<servlet-class>com.login.RegisterUserServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>RegisterUserServlet</servlet-name>
+		<url-pattern>/uregister</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>LabelServlet</servlet-name>
+		<servlet-class>com.download.LabelServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LabelServlet</servlet-name>
+		<url-pattern>/label</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>Share</servlet-name>
+		<servlet-class>com.download.Share</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Share</servlet-name>
+		<url-pattern>/share</url-pattern>
+	</servlet-mapping>
+</web-app>
