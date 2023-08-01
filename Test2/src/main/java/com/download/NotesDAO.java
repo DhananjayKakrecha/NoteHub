@@ -142,7 +142,7 @@ public class NotesDAO {
 
 	public int pinNote(String uname, String fileName) {
 		int result = 0;
-		String query = "Insert into " + uname + " values (?,?)";
+		String query = "Insert into " + uname + " values (?,?,?,?)";
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -157,6 +157,8 @@ public class NotesDAO {
 			PreparedStatement preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setString(1, fileName);
 			preparedStatement.setString(2, "NULL");
+			preparedStatement.setString(3, "no");
+			preparedStatement.setString(4, "NULL");
 
 			result = preparedStatement.executeUpdate();
 		} catch (SQLException e) {
@@ -219,7 +221,7 @@ public class NotesDAO {
 	
 	public int pinToLabel(String uname,String fileName,String label) {
 		int result=0;
-		String query = "Insert into " +uname+ " values(?,?)";
+		String query = "Insert into " +uname+ " values(?,?,?,?)";
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -234,6 +236,8 @@ public class NotesDAO {
 			PreparedStatement preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setString(1, fileName);
 			preparedStatement.setString(2, label);
+			preparedStatement.setString(3, "no");
+			preparedStatement.setString(4, "NULL");
 
 			result = preparedStatement.executeUpdate();
 		} catch (SQLException e) {
