@@ -36,6 +36,10 @@ public class NotesDAO {
 				Notes note = createNoteFromResultSet(resultSet);
 				notes.add(note);
 			}
+			
+			connection.close();
+			preparedStatement.close();
+			resultSet.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -49,6 +53,8 @@ public class NotesDAO {
 		notes.setFileName(rs.getString("file_name"));
 		notes.setName(rs.getString("name"));
 		notes.setSubName(rs.getString("sub_name"));
+		notes.setTopic(rs.getString("topic"));
+		notes.setUnit(rs.getString("unit"));
 		return notes;
 	}
 
@@ -64,12 +70,13 @@ public class NotesDAO {
 		}
 		try {
 			Connection connection = DriverManager.getConnection(databaseUrl, username, password);
-			String query = "Select * from notes where sub_name like ? or name like ? or file_name like ?";
+			String query = "Select * from notes where topic like ? or sub_name like ? or name like ? or file_name like ?";
 
 			PreparedStatement preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setString(1, searchParameter);
 			preparedStatement.setString(2, searchParameter);
 			preparedStatement.setString(3, searchParameter);
+			preparedStatement.setString(4, searchParameter);
 
 			ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -77,10 +84,51 @@ public class NotesDAO {
 				Notes note = createNoteFromResultSet(resultSet);
 				notes.add(note);
 			}
+			
+			connection.close();
+			preparedStatement.close();
+			resultSet.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
+		return notes;
+	}
+	
+	public List<Notes> getFilterdNotes(String uname, String filter){
+		List<Notes> notes = new ArrayList<>();
+		String searchParameter = "%" +filter+ "%";
+		
+		String query = "Select notes.topic,notes.name,notes.sub_name,notes.file_name,notes.unit from notes,"+ uname + " where (notes.file_name = "+ uname+ ".file_name and labels = ?) and (notes.topic like ? or notes.sub_name like ? or notes.unit like ?)";
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			Connection connection = DriverManager.getConnection(databaseUrl, username, password);
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, "NULL");
+			preparedStatement.setString(2, searchParameter);
+			preparedStatement.setString(3, searchParameter);
+			preparedStatement.setString(4, searchParameter);
+
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			while (resultSet.next()) {
+				Notes note = createNoteFromResultSet(resultSet);
+				notes.add(note);
+			}
+			
+			connection.close();
+			preparedStatement.close();
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		return notes;
 	}
 
@@ -88,7 +136,7 @@ public class NotesDAO {
 		List<Notes> notes = new ArrayList<>();
 		String p2 = uname + ".file_name";
 
-		String query = "Select notes.file_name,notes.sub_name,notes.name from notes," + uname
+		String query = "Select notes.file_name,notes.sub_name,notes.name,notes.topic,notes.unit from notes," + uname
 				+ " where notes.file_name = " + uname + ".file_name and labels = 'NULL'";
 
 		try {
@@ -108,6 +156,10 @@ public class NotesDAO {
 				Notes note = createNoteFromResultSet(resultSet);
 				notes.add(note);
 			}
+			
+			connection.close();
+			statement.close();
+			resultSet.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -116,7 +168,7 @@ public class NotesDAO {
 
 	public boolean isPinned(String uname, String fileName) {
 		boolean result = false;
-		String query = "Select * from " + uname + " where file_name = ?";
+		String query = "Select * from " + uname + " where file_name = ? and labels = ?";
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -129,10 +181,14 @@ public class NotesDAO {
 
 			PreparedStatement preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setString(1, fileName);
+			preparedStatement.setString(2, "NULL");
 
 			ResultSet resultSet = preparedStatement.executeQuery();
 			result = resultSet.next();
 
+			connection.close();
+			preparedStatement.close();
+			resultSet.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -142,7 +198,7 @@ public class NotesDAO {
 
 	public int pinNote(String uname, String fileName) {
 		int result = 0;
-		String query = "Insert into " + uname + " values (?,?,?,?)";
+		String query = "Insert into " + uname + " values (?,?)";
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -157,10 +213,11 @@ public class NotesDAO {
 			PreparedStatement preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setString(1, fileName);
 			preparedStatement.setString(2, "NULL");
-			preparedStatement.setString(3, "no");
-			preparedStatement.setString(4, "NULL");
 
 			result = preparedStatement.executeUpdate();
+			
+			connection.close();
+			preparedStatement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -186,6 +243,9 @@ public class NotesDAO {
 			preparedStatement.setString(1, fileName);
 
 			result = preparedStatement.executeUpdate();
+			
+			connection.close();
+			preparedStatement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -213,6 +273,9 @@ public class NotesDAO {
 			while (resultSet.next()) {
 				list.add(resultSet.getString("label"));
 			}
+			
+			connection.close();
+			resultSet.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -221,7 +284,7 @@ public class NotesDAO {
 	
 	public int pinToLabel(String uname,String fileName,String label) {
 		int result=0;
-		String query = "Insert into " +uname+ " values(?,?,?,?)";
+		String query = "Insert into " +uname+ " values(?,?)";
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -236,10 +299,11 @@ public class NotesDAO {
 			PreparedStatement preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setString(1, fileName);
 			preparedStatement.setString(2, label);
-			preparedStatement.setString(3, "no");
-			preparedStatement.setString(4, "NULL");
 
 			result = preparedStatement.executeUpdate();
+			
+			connection.close();
+			preparedStatement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -249,7 +313,7 @@ public class NotesDAO {
 	
 	public List<Notes> getAllLabelNotes(String uname,String label){
 		List<Notes> notes = new ArrayList<>();
-		String query = "Select notes.file_name,notes.sub_name,notes.name from notes," + uname
+		String query = "Select notes.file_name,notes.sub_name,notes.name,notes.topic,notes.unit from notes," + uname
 				+ " where notes.file_name = " + uname + ".file_name and labels = '" +label+ "'";
 		
 		try {
@@ -269,6 +333,10 @@ public class NotesDAO {
 				Notes note = createNoteFromResultSet(resultSet);
 				notes.add(note);
 			}
+			
+			connection.close();
+			statement.close();
+			resultSet.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -294,6 +362,9 @@ public class NotesDAO {
 			preparedStatement.setString(2, label);
 
 			result = preparedStatement.executeUpdate();
+			
+			connection.close();
+			preparedStatement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -320,6 +391,10 @@ public class NotesDAO {
 
 			ResultSet resultSet = preparedStatement.executeQuery();
 			result = resultSet.next();
+			
+			connection.close();
+			preparedStatement.close();
+			resultSet.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -346,6 +421,9 @@ public class NotesDAO {
 			preparedStatement.setString(2, label);
 
 			result = preparedStatement.executeUpdate();
+			
+			connection.close();
+			preparedStatement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -372,65 +450,13 @@ public class NotesDAO {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			result = resultSet.next();
 			 
+			connection.close();
+			preparedStatement.close();
+			resultSet.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return result;
 	}
 	
-	public int share(String sender,String reciever,String fileName) {
-		int result = 0;
-		String query = "Insert into " +reciever+ " values(?,?,?,?)";
-		
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		try {
-			Connection connection = DriverManager.getConnection(databaseUrl,username,password);
-			PreparedStatement preparedStatement = connection.prepareStatement(query);
-			preparedStatement.setString(1, fileName);
-			preparedStatement.setString(2, "NULL");
-			preparedStatement.setString(3, "yes");
-			preparedStatement.setString(4, sender);
-			
-			result = preparedStatement.executeUpdate();
-		}catch(SQLException e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
-	
-	public List<Notes> getSharedNotes(String uname){
-		List<Notes> notes = new ArrayList<>();
-		String query = "Select notes.file_name,notes.sub_name,notes.name,send_by from notes," +uname+ " where notes.file_name = " +uname+ ".file_name and shared='yes'";
-		
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		try {
-			Connection connection = DriverManager.getConnection(databaseUrl, username, password);
-
-			Statement statement = connection.createStatement();
-
-			ResultSet resultSet = statement.executeQuery(query);
-
-			while (resultSet.next()) {
-				Notes note = createNoteFromResultSet(resultSet);
-//				note.setFileName(resultSet.getString("file_name"));
-				note.setSender(resultSet.getString("send_by"));
-				notes.add(note);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return notes;
-	}
 }

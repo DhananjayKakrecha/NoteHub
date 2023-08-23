@@ -5,7 +5,8 @@ public class Notes {
 	private String name;
 	private String fileName;
 	private int nid;
-	private String sender;
+	private String topic;
+	private String unit;
 	
 	public Notes() {
 		// TODO Auto-generated constructor stub
@@ -50,13 +51,21 @@ public class Notes {
 		this.nid = nid;
 	}
 
-	public String getSender() {
-		return sender;
+	public String getTopic() {
+		return topic;
 	}
 
-	public void setSender(String sender) {
-		this.sender = sender;
+	public void setTopic(String topic) {
+		this.topic = topic;
 	}
-	
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
 	
 }

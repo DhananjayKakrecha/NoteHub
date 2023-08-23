@@ -41,7 +41,7 @@ public class RegistrationDAO {
 			System.out.println(e);
 		}
 		try(Connection conn = DriverManager.getConnection(url, username, password)){
-			String sql = "Create table " +uname+ " (file_name varchar(255),labels varchar(255),shared varchar(10),send_by varchar(255))";
+			String sql = "Create table " +uname+ " (file_name varchar(255),labels varchar(255))";
 			Statement statement = conn.createStatement();
 			result = statement.execute(sql);
 		}catch(SQLException e) {

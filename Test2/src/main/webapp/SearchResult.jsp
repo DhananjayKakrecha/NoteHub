@@ -23,8 +23,10 @@
 	<table>
 		<th>
 		<tr>
+			<td>Topic :</td>
 			<td>File Name :</td>
 			<td>Subject Name :</td>
+			<td>Unit :</td>
 			<td>Provide by :</td>
 			<td>Download</td>
 		</tr>
@@ -35,8 +37,10 @@
 		%>
 
 		<tr>
+			<td><%=note.getTopic() %></td>
 			<td><%=note.getFileName()%></td>
 			<td><%=note.getSubName()%></td>
+			<td><%=note.getUnit() %></td>
 			<td><%=note.getName()%></td>
 			<td><form method="post" action="download">
 					<input type="hidden" name="subName" value="<%=note.getSubName()%>">

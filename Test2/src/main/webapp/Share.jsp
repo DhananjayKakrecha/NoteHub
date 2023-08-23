@@ -9,15 +9,15 @@
 <body>
 	<%
 	String username = request.getParameter("username");
-	String fileName = request.getParameter("fileName");
+	int nid = Integer.parseInt(request.getParameter("nid"));
 	%>
 	<form method="post" action="share">
 		<table>
 			<tr>
 				<td>Share to:</td>
 				<td><input type="text" name="receiver"></td>
-				<input type="hidden" name="username" value="<%=username%>">
-				<input type="hidden" name="fileName" value="<%=fileName%>">
+				<input type="hidden" name="sender" value="<%=username%>">
+				<input type="hidden" name="nid" value="<%= nid%>">				
 				<td><input type="submit" value="Send"></td>
 			</tr>
 		</table>

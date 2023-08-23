@@ -12,21 +12,14 @@
 <body>
 	<%
 	String uname = request.getParameter("username");
+	String filter = request.getParameter("filter");
 	NotesDAO dao = new NotesDAO();
-	List<Notes> notes = dao.getPinnedNotes(uname);
+	List<Notes> notes = dao.getFilterdNotes(uname, filter);
 	List<String> lists = dao.getLabels(uname);
 	%>
 
 	<h2>Notes</h2>
 	<h3><%=uname%></h3>
-	<form method="post" action="Archivee.jsp?username=<%= uname%>">
-			<table>
-				<tr>
-					<td><input type="text" name="filter"></td>
-					<td><input type="submit" value="Filter"></td>
-				</tr>
-			</table>
-		</form>
 	<table>
 		<th>
 		<tr>
