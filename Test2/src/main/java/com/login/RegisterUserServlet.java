@@ -27,15 +27,20 @@ public class RegisterUserServlet extends HttpServlet {
 		String email = request.getParameter("email");
 		String type = "user";
 
-		// Create a new Registration object
-		Registration registration = new Registration(username, password, fullName, email, type);
+		if(!dao.checkUsername(username)) {
+			// Create a new Registration object
+			Registration registration = new Registration(username, password, fullName, email, type);
 
-		// Save the registration data to the database
-		dao.saveRegistration(registration);
-		boolean result = dao.generateUser(username);
-
-		RequestDispatcher dispatcher = request.getRequestDispatcher("Login.jsp");
-		dispatcher.forward(request, response);
+			// Save the registration data to the database
+			dao.saveRegistration(registration);
+			boolean result = dao.generateUser(username);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("Login.jsp");
+			dispatcher.forward(request, response);
+		}else {
+			response.sendRedirect("Error.jsp");
+		}
+		
+		
 	}
 
 }

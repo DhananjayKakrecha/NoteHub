@@ -34,14 +34,6 @@
     <url-pattern>/pin</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>LabelPin</servlet-name>
-    <servlet-class>com.download.LabelPin</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>LabelPin</servlet-name>
-    <url-pattern>/labelPin</url-pattern>
-  </servlet-mapping>
-  <servlet>
     <servlet-name>RegisterUserServlet</servlet-name>
     <servlet-class>com.login.RegisterUserServlet</servlet-class>
   </servlet>
@@ -72,5 +64,23 @@
   <servlet-mapping>
     <servlet-name>ShareServlet</servlet-name>
     <url-pattern>/share</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>DeleteNoteServlet</servlet-name>
+    <servlet-class>com.note.DeleteNoteServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DeleteNoteServlet</servlet-name>
+    <url-pattern>/deleteNote</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>PinNoteServlet</servlet-name>
+    <servlet-class>com.note.PinNoteServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PinNoteServlet</servlet-name>
+    <url-pattern>/pinNote</url-pattern>
   </servlet-mapping>
 </web-app>

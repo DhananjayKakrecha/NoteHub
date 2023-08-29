@@ -12,10 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 public class PinServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private NotesDAO dao;
-
+	private PracticalsDAO pracDao;
+	
 	@Override
 	public void init() throws ServletException {
 		dao = new NotesDAO();
+		pracDao = new PracticalsDAO();
 		super.init();
 	}
 
@@ -30,19 +32,21 @@ public class PinServlet extends HttpServlet {
 		if (action != null) {
 			if (action.equals("pin")) {
 				result = dao.pinNote(uname, fileName);
-				RequestDispatcher dispatcher = request.getRequestDispatcher("NotesDetails.jsp");
-				dispatcher.forward(request, response);
 			} else if (action.equals("unpin")) {
 				result = dao.unPinNote(uname, fileName);
-				RequestDispatcher dispatcher = request.getRequestDispatcher("NotesDetails.jsp");
-				dispatcher.forward(request, response);
-			} else {
+			} else if(action.equals("pinlabel")) {
+				result = dao.pinToLabel(uname, fileName, label);
+			} else if(action.equals("unpinlabel")){
 				result = dao.unPinLabelNote(uname, label, fileName);
-				RequestDispatcher dispatcher = request.getRequestDispatcher("NotesDetails.jsp");
-				dispatcher.forward(request, response);
+			} else if(action.equals("pinprac")) {
+				result = pracDao.pinPractical(uname, fileName);
+			} else if(action.equals("unpinprac")) {
+				result = pracDao.unPinPractical(uname, fileName);
 			}
 		}
-
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("NotesDetails.jsp");
+		dispatcher.forward(request, response);
 	}
 
 }

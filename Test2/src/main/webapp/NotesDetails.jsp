@@ -48,12 +48,11 @@
 		<%
 		}
 		%>
-		<br> <a href="./AddNote.jsp?username=<%=username%>">Add
-			Note</a> <a href="./Inbox.jsp?username=<%=username%>">Inbox</a> <br>
-		<br>
+		<br> <a href="./AddNote.jsp?username=<%=username%>">Add Note</a>
+		<a href="./Inbox.jsp?username=<%=username%>">Inbox</a> <br> <br>
 		<br>
 		<h3>Notes</h3>
-		<form method="post" action="NotesDetail.jsp?username=<%= username%>">
+		<form method="post" action="NotesDetail.jsp?username=<%=username%>">
 			<table>
 				<tr>
 					<td><input type="text" name="filter"></td>
@@ -61,20 +60,36 @@
 				</tr>
 			</table>
 		</form>
-		
+
 		<%
 		NoteDAO notesDao = new NoteDAO();
 		List<Note> notes = notesDao.getNote(username);
 		for (Note note : notes) {
+			Integer nid = (Integer) note.getId();
 		%>
 
-		<h4><%=note.getTitle()%></h4>
-		<h5><%=note.getDate()%></h5>
-		<h3><%=note.getDescription()%></h3>
-		<form action="Share.jsp?username=<%=username%>" method="post">
-			<input type="hidden" name="nid" value="<%=note.getId()%>"> <input
-				type="submit" value="Share">
-		</form>
+		<a href="UNote.jsp?username=<%= username%>&nid=<%= nid.toString()%>" style="text-decoration:none;font-color:black;">
+			<div>
+				<h4><%=note.getTitle()%></h4>
+				<h5><%=note.getDate()%></h5>
+				<h3><%=note.getDescription()%></h3>
+				<form action="pinNote?username=<%= username%>" method="post">
+					<input type="hidden" name="title" value="<%= note.getTitle()%>">
+					<input type="hidden" name="nid" value="<%=note.getId()%>">
+					<input type="hidden" name="action" value="pin">
+					<input type="submit" value="Pin">
+				</form>
+				<form action="Share.jsp?username=<%=username%>" method="post">
+					<input type="hidden" name="nid" value="<%=note.getId()%>">
+					<input type="submit" value="Share">
+				</form>
+				<form action="deleteNote" method="post">
+					<input type="hidden" name="nid" value="<%=note.getId()%>">
+					<input type="submit" value="Delete">
+				</form>
+				<a href="VersionControl.jsp?username=<%= username%>&nid=<%= nid.toString()%>"><button>Version Control</button></a>
+			</div>
+		</a>
 		<hr>
 		<%
 		}

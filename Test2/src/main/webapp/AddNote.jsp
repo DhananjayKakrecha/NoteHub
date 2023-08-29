@@ -22,6 +22,7 @@
 				<td><textarea name="desc" rows="10" cols="10"></textarea></td>
 			</tr>
 			<tr>
+				<input type="hidden" name="action" value="add">
 				<td><input type="submit" value="Add"></td>
 			</tr>
 		</table>

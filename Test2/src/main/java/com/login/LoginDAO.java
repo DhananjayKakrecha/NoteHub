@@ -7,54 +7,38 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class LoginDAO {
-	private String jdbcURL;
-    private String jdbcUsername;
-    private String jdbcPassword;
-    private Connection jdbcConnection;
+	private String jdbcURL="jdbc:mysql://localhost:3306/t1";
+    private String jdbcUsername="root";
+    private String jdbcPassword="root";
 
-    public LoginDAO(String jdbcURL, String jdbcUsername, String jdbcPassword) {
-        this.jdbcURL = jdbcURL;
-        this.jdbcUsername = jdbcUsername;
-        this.jdbcPassword = jdbcPassword;
-    }
-
-    // Establishes a database connection
-    private void connect() throws SQLException {
-        if (jdbcConnection == null || jdbcConnection.isClosed()) {
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-            } catch (ClassNotFoundException e) {
-                throw new SQLException("Could not load database driver");
-            }
-            jdbcConnection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
-        }
-    }
     
- // Closes the database connection
-    private void disconnect() throws SQLException {
-        if (jdbcConnection != null && !jdbcConnection.isClosed()) {
-            jdbcConnection.close();
-        }
-    }
-    
- // Validates the login credentials
-    public boolean validateCredentials(LoginModel loginModel) throws SQLException {
+    // Validates the login credentials
+    public boolean validateCredentials(String usrname,String password){
         boolean isValid = false;
         String query = "SELECT * FROM users WHERE username = ? AND password = ?";
 
-        connect();
-
-        try (PreparedStatement statement = jdbcConnection.prepareStatement(query)) {
-            statement.setString(1, loginModel.getUsername());
-            statement.setString(2, loginModel.getPassword());
-
-            ResultSet resultSet = statement.executeQuery();
-            isValid = resultSet.next();
-            
+        try {
+        	Class.forName("com.mysql.jdbc.Driver");
+        }catch(ClassNotFoundException e) {
+        	System.out.println(e);
         }
-
-        disconnect();
-
+        
+        try {
+        	Connection con = DriverManager.getConnection(jdbcURL,jdbcUsername,jdbcPassword);
+        	PreparedStatement preparedStatement = con.prepareStatement(query);
+        	preparedStatement.setString(1, usrname);
+        	preparedStatement.setString(2, password);
+        	
+        	ResultSet rs = preparedStatement.executeQuery();
+        	isValid = rs.next();
+     
+        	rs.close();
+        	preparedStatement.close();
+        	con.close();
+        }catch(SQLException e) {
+        	System.out.println(e);
+        }
+        
         return isValid;
     }
     

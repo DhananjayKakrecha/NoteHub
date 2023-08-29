@@ -41,9 +41,35 @@ public class RegistrationDAO {
 			System.out.println(e);
 		}
 		try(Connection conn = DriverManager.getConnection(url, username, password)){
-			String sql = "Create table " +uname+ " (file_name varchar(255),labels varchar(255))";
+			String sql = "Create table " +uname+ " (nid int,file_name varchar(255),labels varchar(255))";
 			Statement statement = conn.createStatement();
 			result = statement.execute(sql);
+			String query = "Create table " +uname+ "VersionControl(vid int primary key auto_increment,nid int,title varhcar(500),description mediumtext,branchfrom int,dateTime datetime)";
+			Statement statement2 = conn.createStatement();
+			result = statement2.execute(query);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	public boolean checkUsername(String uname) {
+		boolean result = false;
+		String query = "Select username from users where username = ?";
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		
+		try(Connection conn = DriverManager.getConnection(url, username, password)){
+			PreparedStatement preparedStatement = conn.prepareStatement(query);
+			preparedStatement.setString(1, uname);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			
+			result = resultSet.next();
 		}catch(SQLException e) {
 			e.printStackTrace();
 		}

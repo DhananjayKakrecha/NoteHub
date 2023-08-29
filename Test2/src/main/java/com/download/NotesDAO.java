@@ -50,6 +50,7 @@ public class NotesDAO {
 	private Notes createNoteFromResultSet(ResultSet rs) throws SQLException {
 		Notes notes = new Notes();
 
+		notes.setNid(rs.getInt("notesId"));
 		notes.setFileName(rs.getString("file_name"));
 		notes.setName(rs.getString("name"));
 		notes.setSubName(rs.getString("sub_name"));
@@ -81,8 +82,7 @@ public class NotesDAO {
 			ResultSet resultSet = preparedStatement.executeQuery();
 
 			while (resultSet.next()) {
-				Notes note = createNoteFromResultSet(resultSet);
-				notes.add(note);
+				notes.add(createNoteFromResultSet(resultSet));
 			}
 			
 			connection.close();
@@ -99,7 +99,7 @@ public class NotesDAO {
 		List<Notes> notes = new ArrayList<>();
 		String searchParameter = "%" +filter+ "%";
 		
-		String query = "Select notes.topic,notes.name,notes.sub_name,notes.file_name,notes.unit from notes,"+ uname + " where (notes.file_name = "+ uname+ ".file_name and labels = ?) and (notes.topic like ? or notes.sub_name like ? or notes.unit like ?)";
+		String query = "Select notes.topic,notes.name,notes.sub_name,notes.file_name,notes.unit,notes.notesId from notes,"+ uname + " where (notes.file_name = "+ uname+ ".file_name and labels = ?) and (notes.topic like ? or notes.sub_name like ? or notes.unit like ?)";
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -134,10 +134,9 @@ public class NotesDAO {
 
 	public List<Notes> getPinnedNotes(String uname) {
 		List<Notes> notes = new ArrayList<>();
-		String p2 = uname + ".file_name";
 
-		String query = "Select notes.file_name,notes.sub_name,notes.name,notes.topic,notes.unit from notes," + uname
-				+ " where notes.file_name = " + uname + ".file_name and labels = 'NULL'";
+		String query = "Select notes.file_name,notes.sub_name,notes.name,notes.topic,notes.unit,notes.notesId from notes," + uname
+				+ " where (notes.file_name = " + uname + ".file_name and labels = ?)";
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -147,18 +146,17 @@ public class NotesDAO {
 		}
 		try {
 			Connection connection = DriverManager.getConnection(databaseUrl, username, password);
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, "NULL");
 
-			Statement statement = connection.createStatement();
-
-			ResultSet resultSet = statement.executeQuery(query);
+			ResultSet resultSet = preparedStatement.executeQuery();
 
 			while (resultSet.next()) {
-				Notes note = createNoteFromResultSet(resultSet);
-				notes.add(note);
+				notes.add(createNoteFromResultSet(resultSet));
 			}
 			
 			connection.close();
-			statement.close();
+			preparedStatement.close();
 			resultSet.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -168,7 +166,7 @@ public class NotesDAO {
 
 	public boolean isPinned(String uname, String fileName) {
 		boolean result = false;
-		String query = "Select * from " + uname + " where file_name = ? and labels = ?";
+		String query = "Select * from " + uname + " where (file_name = ? and labels = ?)";
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -198,7 +196,7 @@ public class NotesDAO {
 
 	public int pinNote(String uname, String fileName) {
 		int result = 0;
-		String query = "Insert into " + uname + " values (?,?)";
+		String query = "Insert into " + uname + "(file_name,labels) values (?,?)";
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -213,6 +211,8 @@ public class NotesDAO {
 			PreparedStatement preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setString(1, fileName);
 			preparedStatement.setString(2, "NULL");
+			
+			
 
 			result = preparedStatement.executeUpdate();
 			
@@ -227,7 +227,7 @@ public class NotesDAO {
 
 	public int unPinNote(String uname, String fileName) {
 		int result = 0;
-		String query = "Delete from " + uname + " where file_name = ? and labels = 'NULL'";
+		String query = "Delete from " + uname + " where (file_name = ? and labels = ?)";
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -241,6 +241,7 @@ public class NotesDAO {
 
 			PreparedStatement preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setString(1, fileName);
+			preparedStatement.setString(2, "NULL");
 
 			result = preparedStatement.executeUpdate();
 			
@@ -284,7 +285,7 @@ public class NotesDAO {
 	
 	public int pinToLabel(String uname,String fileName,String label) {
 		int result=0;
-		String query = "Insert into " +uname+ " values(?,?)";
+		String query = "Insert into " +uname+ "(file_name,labels) values(?,?)";
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -311,10 +312,37 @@ public class NotesDAO {
 		return result;
 	}
 	
+	public int unPinLabelNote(String uname,String label,String fileName) {
+		int result = 0;
+		String query = "Delete from " +uname+ " where (file_name = ? and labels = ?)";
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			Connection connection = DriverManager.getConnection(databaseUrl, username, password);
+	
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, fileName);
+			preparedStatement.setString(2, label);
+	
+			result = preparedStatement.executeUpdate();
+			
+			connection.close();
+			preparedStatement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
 	public List<Notes> getAllLabelNotes(String uname,String label){
 		List<Notes> notes = new ArrayList<>();
-		String query = "Select notes.file_name,notes.sub_name,notes.name,notes.topic,notes.unit from notes," + uname
-				+ " where notes.file_name = " + uname + ".file_name and labels = '" +label+ "'";
+		String query = "Select notes.file_name,notes.sub_name,notes.name,notes.topic,notes.unit,notes.notesId from notes," +uname+ " where (notes.file_name = "+uname+ ".file_name and labels = ?)";
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -324,51 +352,22 @@ public class NotesDAO {
 		}
 		try {
 			Connection connection = DriverManager.getConnection(databaseUrl, username, password);
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, label);
 
-			Statement statement = connection.createStatement();
-
-			ResultSet resultSet = statement.executeQuery(query);
-
+			ResultSet resultSet = preparedStatement.executeQuery();
+			
 			while (resultSet.next()) {
-				Notes note = createNoteFromResultSet(resultSet);
-				notes.add(note);
+				notes.add(createNoteFromResultSet(resultSet));
 			}
 			
 			connection.close();
-			statement.close();
+			preparedStatement.close();
 			resultSet.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return notes;
-	}
-	
-	public int unPinLabelNote(String uname,String label,String fileName) {
-		int result = 0;
-		String query = "Delete from " +uname+ " where file_name = ? and labels = ?";
-		
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		try {
-			Connection connection = DriverManager.getConnection(databaseUrl, username, password);
-
-			PreparedStatement preparedStatement = connection.prepareStatement(query);
-			preparedStatement.setString(1, fileName);
-			preparedStatement.setString(2, label);
-
-			result = preparedStatement.executeUpdate();
-			
-			connection.close();
-			preparedStatement.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return result;
 	}
 	
 	public boolean isLabelled(String uname,String fileName,String label) {
