@@ -7,6 +7,7 @@ public class Notes {
 	private int nid;
 	private String topic;
 	private String unit;
+	private String weightage;
 	
 	public Notes() {
 		// TODO Auto-generated constructor stub
@@ -65,6 +66,14 @@ public class Notes {
 
 	public void setUnit(String unit) {
 		this.unit = unit;
+	}
+
+	public String getWeightage() {
+		return weightage;
+	}
+
+	public void setWeightage(String weightage) {
+		this.weightage = weightage;
 	}
 
 	

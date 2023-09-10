@@ -19,10 +19,28 @@ public class DeleteNoteServlet extends HttpServlet {
     }
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int nid = Integer.parseInt(request.getParameter("nid"));
+		String action = request.getParameter("action");
+		String uname = request.getParameter("username");
 		
-		int result = dao.deleteNote(nid);
+		String type = (String)request.getSession().getAttribute("type");
 		
-		response.sendRedirect("NotesDetails.jsp");
+		if(action.equals("note") && type.equals("teacher")) {
+			int result = dao.deleteNote(nid);
+			int vcNotesdel = dao.deleteVCNotes(nid, uname);
+			response.sendRedirect("Teachers.jsp");
+		}else if(action.equals("vcnote")  && type.equals("teacher")) {
+			int vid = Integer.parseInt(request.getParameter("vid"));
+			int vcNoteDel = dao.deleteVCNote(vid, uname);
+			response.sendRedirect("Teachers.jsp");
+		} else if(action.equals("note") && type.equals("student")) {
+			int result = dao.deleteNote(nid);
+			int vcNotesdel = dao.deleteVCNotes(nid, uname);
+			response.sendRedirect("NotesDetails.jsp");
+		} else if(action.equals("vcnote")  && type.equals("student")) {
+			int vid = Integer.parseInt(request.getParameter("vid"));
+			int vcNoteDel = dao.deleteVCNote(vid, uname);
+			response.sendRedirect("NotesDetails.jsp");
+		}
 	}
 
 }

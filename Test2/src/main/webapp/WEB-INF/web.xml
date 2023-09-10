@@ -83,4 +83,31 @@
     <servlet-name>PinNoteServlet</servlet-name>
     <url-pattern>/pinNote</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>RollBackServlet</servlet-name>
+    <servlet-class>com.note.RollBackServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RollBackServlet</servlet-name>
+    <url-pattern>/rollback</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>SearchServlet</servlet-name>
+    <servlet-class>com.download.SearchServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SearchServlet</servlet-name>
+    <url-pattern>/search</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>UploadServlet</servlet-name>
+    <servlet-class>com.download.UploadServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UploadServlet</servlet-name>
+    <url-pattern>/upload</url-pattern>
+  </servlet-mapping>
 </web-app>

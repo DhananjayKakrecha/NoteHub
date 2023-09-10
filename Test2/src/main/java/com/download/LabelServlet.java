@@ -22,12 +22,22 @@ public class LabelServlet extends HttpServlet {
        
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String username = request.getParameter("username");
-		String label = request.getParameter("labelName");
+		String label = request.getParameter("label");
+		String action = request.getParameter("action");
 		
-		int result = dao.createLabel(username, label);
-		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("NotesDetails.jsp");
-		dispatcher.forward(request, response);
+		if(!dao.checkLabel(username, label) && action.equals("createLabel")) {
+			int result = dao.createLabel(username, label);
+			
+			RequestDispatcher dispatcher = request.getRequestDispatcher("Label.jsp");
+			dispatcher.forward(request, response);
+		}else if(action.equals("deleteLabel")){
+			int delLabel = dao.deleteLabel(username, label);
+			int delNotes = dao.deleteLabelNotes(username, label);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("Label.jsp");
+			dispatcher.forward(request, response);
+		}else {
+			response.sendRedirect("Error.jsp");
+		}
 	}
 
 }

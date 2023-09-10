@@ -1,0 +1,59 @@
+/* *{
+    margin:0px;
+    font-family: Arial, Helvetica, sans-serif;
+} */
+
+.note{
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    border:1px solid rgba(170, 163, 163, 0.418);
+    margin:10px;
+}
+
+.versioncount{
+    padding-left:90%;
+    padding-top:4px;
+}
+
+.note > p{
+    font-size: 20px;
+}
+
+.versiondate{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top:1rem;
+    padding-top: 0.6rem;
+    border-top:1px solid rgba(170, 163, 163, 0.418);
+}
+
+.notebutton{
+    border:none;
+    background-color: transparent;
+    margin-top:5px;
+    margin-bottom:10px;
+    border-radius:5px;
+}
+
+.versionbutton{
+    font-size:20px;
+}
+
+.notebutton:hover{
+    background-color: #FFC107;
+}
+
+ /* .select-button{
+    margin-top:5px;
+    margin-bottom:5px;
+}  */
+
+.section3{
+    border-bottom: 1px solid #FFC107;
+}
+
+
+
+

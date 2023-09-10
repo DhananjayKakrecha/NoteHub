@@ -1,0 +1,89 @@
+/* *{
+    margin:0px;
+    font-family: Arial, Helvetica, sans-serif;
+} */
+
+a{
+    text-decoration: none;
+    color:black;
+}
+
+.note{
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    border:1px solid rgba(170, 163, 163, 0.418);
+    margin:10px;
+}
+
+.pinlogo{
+    padding-left:85%;
+    padding-top:4px;
+}
+
+.note p{
+    font-size: 25px;
+}
+
+.operation{
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.notebutton{
+    border:none;
+    background-color: transparent;
+    margin-bottom:10px;
+    border-radius:5px;
+}
+
+.notebutton:hover{
+    background-color: rgba(128, 128, 128, 0.281);
+}
+
+.labelform{
+    display: flex;
+}
+
+.select-label{
+    border:none;
+    margin-bottom: 5px;
+}
+
+.select-button{
+    margin-bottom:5px;
+}
+
+/* .menu-section{
+    display: flex;
+    align-items: center;
+    padding:0px 0px 0px 12px;
+    font-size:14px;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+}
+
+.menu-section p{
+    font-weight: 500;
+    margin-left:1.1rem;
+    margin-top:1.1rem;
+}
+
+.menu-section:hover{
+    background-color:  rgba(128, 128, 128, 0.281);
+} */
+
+.note-labels{
+    /* font-size: 22px !important; */
+    font-size: 18px;
+    margin-bottom: 0.5rem;
+    font-weight: 400;
+}
+
+.labels{
+    background-color: transparent !important;
+}
+
+.labels:hover{
+    background-color: #FFC107 !important;
+}

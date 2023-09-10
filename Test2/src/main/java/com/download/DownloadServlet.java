@@ -34,7 +34,9 @@ public class DownloadServlet extends HttpServlet {
 			response.getWriter().println("<h3>File " + fileName + " Is Not Present .....!</h3>");
 		} else {
 			String applicationPath = getServletContext().getRealPath("");
+			System.out.println(applicationPath);
 			String downloadPath = applicationPath + File.separator + UPLOAD_DIR + File.separator + subName;
+			System.out.println(downloadPath);
 			String filePath = downloadPath + File.separator + fileName;
 			System.out.println(fileName);
 			System.out.println(filePath);

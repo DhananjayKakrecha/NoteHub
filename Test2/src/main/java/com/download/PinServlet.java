@@ -13,7 +13,7 @@ public class PinServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private NotesDAO dao;
 	private PracticalsDAO pracDao;
-	
+
 	@Override
 	public void init() throws ServletException {
 		dao = new NotesDAO();
@@ -27,26 +27,82 @@ public class PinServlet extends HttpServlet {
 		String fileName = request.getParameter("fileName");
 		String label = request.getParameter("label");
 		String action = request.getParameter("action");
+//		String search = request.getParameter("searchFilter");
 		int result = 0;
 
-		if (action != null) {
-			if (action.equals("pin")) {
-				result = dao.pinNote(uname, fileName);
-			} else if (action.equals("unpin")) {
-				result = dao.unPinNote(uname, fileName);
-			} else if(action.equals("pinlabel")) {
-				result = dao.pinToLabel(uname, fileName, label);
-			} else if(action.equals("unpinlabel")){
-				result = dao.unPinLabelNote(uname, label, fileName);
-			} else if(action.equals("pinprac")) {
-				result = pracDao.pinPractical(uname, fileName);
-			} else if(action.equals("unpinprac")) {
-				result = pracDao.unPinPractical(uname, fileName);
-			}
-		}
-		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("NotesDetails.jsp");
-		dispatcher.forward(request, response);
-	}
+//		if (action != null) {
+//			if (action.equals("pin")) {
+//				result = dao.pinNote(uname, fileName);
+//				response.sendRedirect("SearchResult.jsp");
+////				request.getSession().setAttribute("username",uname);
+////				request.getSession().setAttribute("search", search);
+//			} else if (action.equals("unpin")) {
+//				result = dao.unPinNote(uname, fileName);
+//				response.sendRedirect("SearchResult.jsp");
+//			} else if(action.equals("pinlabel")) {
+//				result = dao.pinToLabel(uname, fileName, label);
+//				response.sendRedirect("SearchResult.jsp");
+//			} else if(action.equals("unpinlabel")){
+//				result = dao.unPinLabelNote(uname, label, fileName);
+//				response.sendRedirect("SearchResult.jsp");
+//			}
+//		}
 
+		if (action != null) {
+			switch (action) {
+			case "pin":
+				result = dao.pinNote(uname, fileName);
+				response.sendRedirect("SearchResult.jsp");
+				break;
+			case "unpin":
+				result = dao.unPinNote(uname, fileName);
+				response.sendRedirect("SearchResult.jsp");
+				break;
+			case "pinlabel":
+				result = dao.pinToLabel(uname, fileName, label);
+				response.sendRedirect("SearchResult.jsp");
+				break;
+			case "unpinlabel":
+				result = dao.unPinLabelNote(uname, label, fileName);
+				response.sendRedirect("SearchResult.jsp");
+				break;
+			case "unpinfromarchive":
+				result = dao.unPinNote(uname, fileName);
+				response.sendRedirect("Archive.jsp");
+				break;
+			case "pinlabelfromarchive":
+				result = dao.pinToLabel(uname, fileName, label);
+				response.sendRedirect("Archive.jsp");
+				break;
+			case "unpinlabelfromLabel":
+				result = dao.unPinLabelNote(uname, label, fileName);
+				response.sendRedirect("Batman.jsp");
+				break;
+			case "unpinfromarchivee":
+				result = dao.unPinNote(uname, fileName);
+				response.sendRedirect("Archivee.jsp");
+				break;
+			case "pinlabelfromarchivee":
+				result = dao.pinToLabel(uname, fileName, label);
+				response.sendRedirect("Archivee.jsp");
+				break;
+			case "pinlabelfromlabel":
+				result = dao.pinToLabel(uname, fileName, label);
+				response.sendRedirect("Batman.jsp");
+				break;
+			case "pinlabelfromfilterlabel":
+				result = dao.pinToLabel(uname,fileName,label);
+				response.sendRedirect("Batmann.jsp");
+				break;
+			case "unpinlabelfromfilterlabel":
+				result = dao.unPinLabelNote(uname, label, fileName);
+				response.sendRedirect("Batmann.jsp");
+				break;
+			}
+
+//		RequestDispatcher dispatcher = request.getRequestDispatcher("NotesDetails.jsp");
+//		dispatcher.forward(request, response);
+		}
+
+	}
 }

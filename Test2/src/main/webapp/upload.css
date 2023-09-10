@@ -1,0 +1,79 @@
+*{
+    margin:0px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+input:focus, button:focus, textarea:focus,select:focus{
+    outline:none;
+}
+
+.uploadNote-col{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.uploadnote-section{
+    margin-top:2rem;
+    background-color: #FFFFFF;
+    border:1px solid rgba(128, 128, 128, 0.281);
+    border-radius: 20px;
+    width:50rem;
+    padding:2rem;
+}
+
+/* .uploadnote-form{
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+} */
+
+/* .uploadnote-title{
+    font-size:18px;
+    padding:10px 20px;
+    margin-top:20px;
+} */
+
+/* .uploadnote-form input{
+    width: 100%;
+    border-radius: 10px;
+} */
+
+/* .uploadnote-form > *{
+    padding:10px 20px;
+}
+
+.uploadfile{
+    margin-top:1rem;
+}
+
+.fileupload{
+    background-color: rgba(128, 128, 128, 0.281) !important;
+    border-top-right-radius:10px !important;
+    border-bottom-right-radius: 10px !important;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+} */
+
+/* select{
+    width:100%;
+    border:none;
+} */
+
+#addNote-button{
+    border:none;
+    height: 40px;
+    width: 40px;
+    background-color: transparent;
+    margin:20px;
+}
+
+#addNote-button:focus{
+    background-color: #FFC107;
+    border-radius: 50%;
+}
+
+#addNote-button:hover{
+    background-color: #FFC107;
+    border-radius: 50%;
+}

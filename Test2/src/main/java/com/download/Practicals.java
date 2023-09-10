@@ -7,6 +7,7 @@ public class Practicals {
 	private String subName;
 	private String unit;
 	private int pid;
+	private String weightage;
 
 	public String getName() {
 		return name;
@@ -54,5 +55,13 @@ public class Practicals {
 
 	public void setPid(int pid) {
 		this.pid = pid;
+	}
+
+	public String getWeightage() {
+		return weightage;
+	}
+
+	public void setWeightage(String weightage) {
+		this.weightage = weightage;
 	}
 }

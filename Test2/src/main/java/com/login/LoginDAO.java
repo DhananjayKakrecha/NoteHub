@@ -13,8 +13,8 @@ public class LoginDAO {
 
     
     // Validates the login credentials
-    public boolean validateCredentials(String usrname,String password){
-        boolean isValid = false;
+    public String validateCredentials(String usrname,String password){
+       String type = "";
         String query = "SELECT * FROM users WHERE username = ? AND password = ?";
 
         try {
@@ -30,8 +30,10 @@ public class LoginDAO {
         	preparedStatement.setString(2, password);
         	
         	ResultSet rs = preparedStatement.executeQuery();
-        	isValid = rs.next();
+        	rs.next();
      
+        	type = rs.getString("type");
+        	
         	rs.close();
         	preparedStatement.close();
         	con.close();
@@ -39,7 +41,7 @@ public class LoginDAO {
         	System.out.println(e);
         }
         
-        return isValid;
+        return type;
     }
     
     

@@ -25,17 +25,25 @@ public class PinNoteServlet extends HttpServlet {
 		String action = request.getParameter("action");
 		String label = request.getParameter("label");
 		
-		if(action.equals("pin")) {
+		if(action.equals("pin")){
 			int result = dao.pinNote(nid, uname, title);
+			response.sendRedirect("NotesDetails.jsp");
+//			int result2 = dao.pinToLabel(nid, uname, label, title);
 		}else if(action.equals("unpin")) {
 			int result = dao.unPinNote(nid, uname);
+			response.sendRedirect("NotesDetails.jsp");
 		}else if(action.equals("pinLabel")) {
 			int result = dao.pinToLabel(nid, uname, label, title);
+			response.sendRedirect("NotesDetails.jsp");
 		}else if(action.equals("unPinLabel")) {
 			int result = dao.unPinLabelNote(nid, uname, label);
+			response.sendRedirect("NotesDetails.jsp");
+		}else if(action.equals("unPinLabelfromlabel")) {
+			int result = dao.unPinLabelNote(nid, uname, label);
+			response.sendRedirect("Batman.jsp");
 		}
 		
-		response.sendRedirect("NotesDetails.jsp");
+		
 	}
 
 }

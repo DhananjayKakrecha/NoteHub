@@ -47,7 +47,7 @@ public class NoteDAO {
 	
 	public List<Note> getNote(String uname){
 		List<Note> notes = new ArrayList<>();
-		String query = "Select title,description,username,Date_Format(date, '%d-%m-%Y %h:%i %p') AS date,nid from note where username = ?";
+		String query = "Select title,description,username,Date_Format(date, '%d-%m-%Y %h:%i %p') AS date,nid from note where username = ? order by date desc";
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -116,7 +116,8 @@ public class NoteDAO {
 	
 	public int shareNote(String sender, String receiver,int nid) {
 		int result = 0;
-		String query = "Insert into sharedNotes values(?,?,now(),?)";
+		Note note = getNoteById(nid);
+		String query = "Insert into sharedNotes(sender,receiver,date,title,description) values(?,?,now(),?,?)";
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -129,7 +130,8 @@ public class NoteDAO {
 			PreparedStatement ps = con.prepareStatement(query);
 			ps.setString(1, sender);
 			ps.setString(2, receiver);
-			ps.setInt(3, nid);
+			ps.setString(3,note.getTitle());
+			ps.setString(4, note.getDescription());
 			
 			result = ps.executeUpdate();
 			
@@ -144,7 +146,7 @@ public class NoteDAO {
 	
 	public List<Note> getSharedNote(String uname){
 		List<Note> notes = new ArrayList<>();
-		String query = "Select note.title,sharedNotes.sender,Date_Format(sharedNotes.date, '%d-%m-%Y %h:%i %p') As date from note,sharedNotes where note.nid = sharedNotes.nid and sharedNotes.receiver = ?";
+		String query = "Select sid,title,sender,Date_Format(sharedNotes.date, '%d-%m-%Y %h:%i %p') As date from sharedNotes where sharedNotes.receiver = ? order by date desc";
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -173,8 +175,40 @@ public class NoteDAO {
 		return notes;
 	}
 	
+	public Note getSharedNote(int sid) {
+		Note note = new Note();
+		String query = "Select title,description from sharedNotes where sid = ?";
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		}catch(ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		
+		try {
+			Connection connection = DriverManager.getConnection(databaseUrl,username,password);
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, sid);
+			
+			ResultSet rs = preparedStatement.executeQuery();
+			rs.next();
+			
+			note.setDescription(rs.getString("description"));
+			note.setTitle(rs.getString("title"));
+			
+			connection.close();
+			preparedStatement.close();
+			rs.close();
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+		
+		return note;
+	}
+	
 	private Note createSharedNoteFromRS(ResultSet rs) throws SQLException{
 		Note note = new Note();
+		note.setId(rs.getInt("sid"));
 		note.setDate(rs.getString("date"));
 		note.setSender(rs.getString("sender"));
 		note.setTitle(rs.getString("title"));
@@ -356,9 +390,38 @@ public class NoteDAO {
 		return result;
 	}
 	
+	public boolean isPinned(String uname,int nid) {
+		boolean result = false;
+		String query = "Select * from "+uname+" where nid = ? and labels = ?";
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		}catch(ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		
+		try {
+			Connection connection = DriverManager.getConnection(databaseUrl,username,password);
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, nid);
+			preparedStatement.setString(2, "NULL");
+			
+			ResultSet rs = preparedStatement.executeQuery();
+			result = rs.next();
+			
+			
+			connection.close();
+			preparedStatement.close();
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+		
+		return result;
+	}
+	
 	public List<Note> getPinnedNotes(String uname){
 		List<Note> notes = new ArrayList<>();
-		String query = "Select note.title,note.description,Date_Format(date,'%d-%m-%Y %h:%i %p') as date,note.nid from note," +uname+ " where note.nid = " +uname+ ".nid and " +uname+ ".labels = ?";
+		String query = "Select note.title,note.description,Date_Format(date,'%d-%m-%Y %h:%i %p') as date,note.nid from note," +uname+ " where note.nid = " +uname+ ".nid and " +uname+ ".labels = ? order by note.date desc";
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -503,6 +566,39 @@ public class NoteDAO {
 		return notes;
 	}
 	
+	public List<Note> getFilteredLabelNote(String filter, String uname, String label){
+		List<Note> notes = new ArrayList<>();
+		String query = "Select note.title,note.description,note.username,Date_Format(note.date, '%d-%m-%Y %h:%i %p') AS date,note.nid from note,"+uname+ " where (note.nid = "+uname+".nid and labels = ?) and (note.title like ? and note.username = ?)";
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		}catch(ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		
+		try {
+			Connection connection = DriverManager.getConnection(databaseUrl,username,password);
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, label);
+			preparedStatement.setString(2, "%" +filter+ "%");
+			preparedStatement.setString(3, uname);
+			
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			while(rs.next()) {
+				notes.add(createNoteFromRS(rs));
+			}
+			
+			connection.close();
+			preparedStatement.close();
+			rs.close();
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+		
+		return notes;
+	}
+	
 	public Note getNoteByIdVC(int nid) {
 		Note note = new Note();
 		String query = "Select title,description,date as date from note where nid = ?";
@@ -554,6 +650,7 @@ public class NoteDAO {
 			
 			ResultSet rs = preparedStatement.executeQuery();
 			result = rs.next();
+			System.out.println(result);
 			int isNull = rs.getInt("vid");
 			System.out.println("Value of vid from db : " +isNull);
 			if(result && isNull != 0) {
@@ -570,9 +667,43 @@ public class NoteDAO {
 		return vid;
 	}
 	
+	public int maxVid(String uname) {
+		int maxVid = 0;
+		String query = "Select max(vid) as vid from "+uname+"VersionControl";
+		
+		boolean result = false;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		}catch(ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		
+		try {
+			Connection connection = DriverManager.getConnection(databaseUrl,username,password);
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			
+			ResultSet rs = preparedStatement.executeQuery();
+			result = rs.next();
+			int isNull = rs.getInt("vid");
+			System.out.println("Value of vid from db : " +isNull);
+			if(result && isNull != 0) {
+				maxVid = rs.getInt("vid");
+			}
+			
+			connection.close();
+			preparedStatement.close();
+			rs.close();
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+
+		
+		return maxVid;
+	}
+	
 	public int addNoteVC(int nid,String uname) {
 		int result = 0;
-		int vid = 1;
+		int vid = 0;
 		
 		Note note = getNoteByIdVC(nid);
 		Timestamp timestamp = Timestamp.valueOf(note.getDate());
@@ -613,7 +744,7 @@ public class NoteDAO {
 		System.out.println(vid);
 		if(vid == 0) {
 			addNoteVC(nid, uname);
-			vid = 1;
+			vid = getVid(nid, uname);
 		}
 		
 		try {
@@ -644,7 +775,7 @@ public class NoteDAO {
 	
 	public List<VersionControl> getVids(int nid,String uname){
 		List<VersionControl> vids = new ArrayList<>();
-		String query = "Select vid,Date_Format(dateTime,'%d-%m-%Y %h:%i %p') as date from "+uname+"VersionControl where nid = ?";
+		String query = "Select vid,title,Date_Format(dateTime,'%d-%m-%Y %h:%i %p') as date from "+uname+"VersionControl where nid = ?";
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -662,6 +793,7 @@ public class NoteDAO {
 				VersionControl vc = new VersionControl();
 				vc.setVid(rs.getInt("vid"));
 				vc.setDate(rs.getString("date"));
+				vc.setTitle(rs.getString("title"));
 				vids.add(vc);
 			}
 			
@@ -710,4 +842,128 @@ public class NoteDAO {
 		
 		return vcnote;
 	}
+	
+	public VersionControl getVersionNote(String uname, int branchFrom,int nid) {
+		VersionControl vcnote = new VersionControl();
+		String query = "Select title,description from "+uname+"VersionControl where vid = ? and nid = ?";
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		}catch(ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		
+		try {
+			Connection connection = DriverManager.getConnection(databaseUrl,username,password);
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1,branchFrom);
+			preparedStatement.setInt(2, nid);
+			
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			while(rs.next()) {
+				vcnote.setTitle(rs.getString("title"));
+				vcnote.setDescription(rs.getString("description"));
+			}
+			
+			connection.close();
+			preparedStatement.close();
+			rs.close();
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+		
+		return vcnote;
+	}
+	
+	public int deleteVCNote(int vid, String uname) {
+		int result = 0;
+		String query = "Delete from "+uname+"VersionControl where vid = ?";
+
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		}catch(ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		
+		try {
+			Connection connection = DriverManager.getConnection(databaseUrl,username,password);
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, vid);
+			
+			result = preparedStatement.executeUpdate();
+			
+			connection.close();
+			preparedStatement.close();
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+		
+		return result;
+	}
+	
+	public int RollBackVC(int vid,int branchFrom,int nid, String uname) {
+		int result = 0;
+		VersionControl vcnote = getVersionNote(uname, branchFrom, nid);
+		int updateNote = updateNote(nid, vcnote.getTitle(),vcnote.getDescription() );
+		int delNote = deleteVCNote(vid, uname);
+		
+		return result;
+	}
+	
+	public boolean getNextVid(int vid,int nid, String uname) {
+		boolean result = false;
+		String query = "Select vid from "+uname+"VersionControl where nid = ? and vid = ?";
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		}catch(ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		
+		try {
+			Connection connection = DriverManager.getConnection(databaseUrl,username,password);
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, nid);
+			preparedStatement.setInt(2, vid+1);
+			
+			ResultSet rs = preparedStatement.executeQuery();
+			result = rs.next();
+			
+			connection.close();
+			preparedStatement.close();
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+		
+		return result;
+	
+	}
+	
+	public int deleteVCNotes(int nid,String uname) {
+		int result = 0;
+		String query = "Delete from "+uname+"VersionControl where nid = ?";
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		}catch(ClassNotFoundException e) {
+			System.out.println(e);
+		}
+		
+		try {
+			Connection connection = DriverManager.getConnection(databaseUrl,username,password);
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, nid);
+			
+			result = preparedStatement.executeUpdate();
+			
+			connection.close();
+			preparedStatement.close();
+		}catch(SQLException e) {
+			System.out.println(e);
+		}
+		
+		return result;
+	}
+	
 }

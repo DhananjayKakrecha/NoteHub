@@ -1,0 +1,94 @@
+*{
+    margin:0px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+input:focus, button:focus, textarea:focus{
+    outline:none;
+}
+
+.addNote-col{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.addnote-section{
+    margin-top:2rem;
+    background-color: #FFFFFF;
+    border:1px solid rgba(128, 128, 128, 0.281);
+    border-radius: 20px;
+    width:50rem;
+}
+
+.addnote-form{
+    display: flex;
+    /* justify-content: space-between; */
+    flex-direction: column;
+    width: 80%;
+}
+
+.note-title{
+    font-size:25px;
+    padding:10px 20px;
+    margin-top:20px;
+}
+
+.note-title input[placeholder]{
+    width: 100%;
+    border:none;
+}
+
+.note-description{
+    font-size: 20px;
+    padding:10px 20px;
+}
+
+.note-description textarea{
+    width: 100%;
+    border:none;
+}
+
+#addNote-button{
+    border:none;
+    height: 40px;
+    width: 40px;
+    background-color: transparent;
+    margin:20px;
+}
+
+#addNote-button:hover{
+    background-color: #FFC107;
+    border-radius: 50%;
+}
+
+#addNote-button:focus{
+	background-color: #FFC107;
+    border-radius: 50%;
+}
+
+.version-button{
+	border:none;
+    background-color: transparent;
+    margin:1rem;
+    border-radius:10px;
+}
+
+.version-button:hover{
+	 background-color: #FFC107;
+    /*border-radius: 10px;*/
+}
+
+.version-button:focus{
+	 background-color: #FFC107;
+    /*border-radius: 10px;*/
+}
+
+/* Version Buttons */
+.verisonbuttons{
+	display:flex;
+	flex-direction:row;
+	margin:20px;
+}
+
+

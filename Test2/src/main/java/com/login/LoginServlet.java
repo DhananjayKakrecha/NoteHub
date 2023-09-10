@@ -25,13 +25,17 @@ public class LoginServlet extends HttpServlet {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 
-		boolean result = false;
+		String type = loginDAO.validateCredentials(username, password);
 
-		result = loginDAO.validateCredentials(username, password);
-
-		if (result) {
+		if (type.equals("student")) {
 			request.getSession().setAttribute("username", username);
+			request.getSession().setAttribute("type", type);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("NotesDetails.jsp");
+			dispatcher.forward(request, response);
+		}else if(type.equals("teacher")){
+			request.getSession().setAttribute("type", type);
+			request.getSession().setAttribute("username", username);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("Teachers.jsp");
 			dispatcher.forward(request, response);
 		}else {
 			response.sendRedirect("Error.jsp");

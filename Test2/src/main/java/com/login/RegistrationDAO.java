@@ -34,7 +34,7 @@ public class RegistrationDAO {
 	}
 	
 	public boolean generateUser(String uname) {
-		boolean result = false;
+		boolean result = true;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
@@ -44,7 +44,7 @@ public class RegistrationDAO {
 			String sql = "Create table " +uname+ " (nid int,file_name varchar(255),labels varchar(255))";
 			Statement statement = conn.createStatement();
 			result = statement.execute(sql);
-			String query = "Create table " +uname+ "VersionControl(vid int primary key auto_increment,nid int,title varhcar(500),description mediumtext,branchfrom int,dateTime datetime)";
+			String query = "Create table " +uname+ "VersionControl(vid int primary key auto_increment,nid int,title varchar(500),description mediumtext,branchfrom int,dateTime datetime)";
 			Statement statement2 = conn.createStatement();
 			result = statement2.execute(query);
 		}catch(SQLException e) {

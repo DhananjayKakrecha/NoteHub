@@ -1,0 +1,75 @@
+button:focus{
+    outline: none;
+}
+
+button{
+    border:none;
+}
+
+.label-col{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.label-section{
+    margin-top:2rem;
+    width:30rem;
+    background-color: #FFFFFF;
+    border:1px solid rgba(128, 128, 128, 0.281);
+    border-radius: 20px;
+}
+
+.label-form{
+    width:80%;
+}
+
+.create-label{
+    font-size: 22px;
+    padding:10px 20px;
+    margin-top:20px;
+}
+
+.create-label input[placeholder]{
+    border:none;
+    width:100%;
+}
+
+#addlabel-button{
+    border:none;
+    background-color: transparent;
+    border-radius: 50%;
+    margin:20px;
+    height: 40px;
+    width: 40px;
+}
+
+#addlabel-button:hover{
+    background-color: #FFC107;
+}
+
+#addlabel-button:focus{
+    background-color: #FFC107;;
+}
+
+/* All Labels section */
+
+.labels{
+    border-radius: 20px;
+    border:1px solid rgba(128, 128, 128, 0.281);
+    margin:10px;
+}
+
+.del-logo{
+    padding-left:80%;
+}
+
+.labels p{
+    padding:1rem;
+    font-size: 22px;
+}
+
+.label-head{
+    margin-top:2rem;
+    font-size:16px;
+}
