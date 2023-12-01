@@ -105,7 +105,7 @@
           <a href="search?subname=<%= sub%>"
             ><div class="section2 menu-section">
               <img
-                src="./resources/tag.svg"
+                src="./resources/folder2-open.svg"
                 alt="Notes"
                 height="48px"
                 width="24px"
@@ -118,7 +118,7 @@
           <a href="./Label.jsp"
             ><div class="section2 menu-section">
               <img
-                src="./resources/tag.svg"
+                src="./resources/folder-plus.svg"
                 alt="Notes"
                 height="48px"
                 width="24px"
@@ -131,7 +131,7 @@
           for (String list : lists) {
       %>
       <a href="search?label=<%= list%>"><div class="section2 menu-section">
-          <img src="./resources/tag.svg" alt="Notes" height="48px"
+          <img src="./resources/folder2.svg" alt="Notes" height="48px"
               width="24px">
           <p><%= list%></p>
       </div></a>

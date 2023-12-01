@@ -1,0 +1,87 @@
+*{
+    margin:0px;
+    font-family: Arial, Helvetica, sans-serif;
+    /* border:border-box; */
+}
+
+.nav-bar{
+    padding:8px;
+    border-bottom:1px solid rgba(170, 163, 163, 0.418);
+}
+
+.nav-row{
+    /* display: flex; */
+    /* justify-content: space-around; */
+    /* flex-wrap: wrap; */
+}
+
+.nav-logo{
+    height:3rem;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    margin-left:3rem;
+    /* padding-right:30px; */
+}
+
+.logo{
+    /* background-image: url("./resources/NoteHubIcon1.png");
+    background-size: contain;
+    background-repeat:no-repeat; */
+    /* border-radius: 10px; */
+    height: 40px;
+    /* width:44px; */
+    padding-right: 0.5rem;
+}
+
+.logo > img{
+    border-radius: 6px;
+    width: 100%;
+}
+
+.nav-logo p{
+    font-size:30px;
+    padding:16px 0px 0px 4px;
+}
+
+/* Hero Section */
+
+.hero-section{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.promo{
+    margin-left:3rem;
+}
+
+.promo > p{
+    font-family: 'Merriweather', serif;
+    font-size: 48px;
+    font-weight: 550;
+}
+
+.hero-buttons{
+    /* padding:2rem 0rem; */
+    padding-top:1rem;
+}
+
+#login-button{
+    height: 3.2rem;
+    margin-left:1rem;
+}
+
+#sign-button{
+    height: 3.2rem;
+}
+
+a{
+    text-decoration: none;
+    color:black !important;
+    font-size:1.5rem;
+}
+
+button:hover{
+    background-color: transparent !important;
+}

@@ -22,16 +22,16 @@ select:focus{
 }
 
 .pinlogo{
-    padding-left:75%;
+    padding-left:80%;
     padding-top:4px;
 }
 
-.note > p{
-    font-size: 25px;
+.note p{
+    font-size: 25px !important;
 }
 
 span{
-    font-size: 18px;
+    font-size: 16px;
     margin:0px 5px;
 }
 
@@ -70,7 +70,7 @@ span{
 }  */
 
 /* Menu Section */
-
+/*
 .menu-section{
     display: flex;
     align-items: center;
@@ -89,7 +89,7 @@ span{
 .menu-section:hover{
     background-color:  rgba(128, 128, 128, 0.281);
 }
-
+*/
 .section3{
     border-bottom: 1px solid #FFC107;
 }

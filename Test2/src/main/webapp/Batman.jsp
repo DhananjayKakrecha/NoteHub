@@ -20,30 +20,37 @@
 	rel="stylesheet"
 	integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
 	crossorigin="anonymous" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+	href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap"
+	rel="stylesheet">
 <link rel="stylesheet" href="./style.css" />
 <link rel="stylesheet" href="./stylenote.css" />
-<link rel="stylesheet" href="./stylesnotes.css"/>
+<link rel="stylesheet" href="./stylesnotes.css" />
 </head>
 <body>
 	<%
-	
-    String uname = (String) request.getSession().getAttribute("username");
+	String uname = (String) request.getSession().getAttribute("username");
 	uname.strip();
-	
+
+	String type = (String) request.getSession().getAttribute("type");
+	type.strip();
+
 	String label = (String) request.getSession().getAttribute("label");
 	label.strip();
-	
+
 	NotesDAO dao = new NotesDAO();
 	List<Notes> notes = dao.getAllLabelNotes(uname, label);
-    List<String> lists = dao.getLabels(uname);
-      boolean isLabelListEmpty = lists.isEmpty();
-	
+	List<String> lists = dao.getLabels(uname);
+	boolean isLabelListEmpty = lists.isEmpty();
+
 	NoteDAO notesDao = new NoteDAO();
 	List<Note> unotes = notesDao.getAllLabelNotes(uname, label);
-	
+
 	PracticalsDAO pracDao = new PracticalsDAO();
 	List<Practicals> pracs = pracDao.getLabelledPracticals(uname, label);
-	
+
 	BooksDAO bookDao = new BooksDAO();
 	List<Books> books = bookDao.getLabelledbooks(uname, label);
 	%>
@@ -53,7 +60,9 @@
 		<div class="contianer-fluid nav-bar">
 			<div class="row nav-row">
 				<div class="col-lg-2 col-md-2 nav-logo">
-					<div class="logo"></div>
+					<div class="logo">
+						<img src="./resources/NoteHubIcon1.png" alt="" height="38px">
+					</div>
 					<p>NoteHub</p>
 				</div>
 				<div class="col-lg-6 col-md-10 search-bar">
@@ -75,8 +84,7 @@
 					</button>
 					<div class="dropdown">
 						<button class="btn btn-warning dropdown-toggle" type="button"
-							data-bs-toggle="dropdown" aria-expanded="false">
-							Class</button>
+							data-bs-toggle="dropdown" aria-expanded="false">Class</button>
 						<ul class="dropdown-menu">
 							<li><a class="dropdown-item" href="#">FY</a></li>
 							<li><a class="dropdown-item" href="#">CS</a></li>
@@ -90,49 +98,74 @@
 			</div>
 		</div>
 	</header>
-	<div class="container-fluid">
+	<div class="container-fluid hero">
 		<div class="row">
-			<div class="col-lg-2">
-				<a href="search">
-					<div class="section1 menu-section"
-						style="background-color: #feefc3">
-						<img src="./resources/lightbulb.svg" alt="Notes" height="48px"
-							width="24px" />
+			<div class="col-lg-3">
+				<a href="./NotesDetails.jsp">
+					<div class="section1 menu-section">
+						<img src="./resources/icons8-idea-50.png" alt="Notes"
+							height="32px" width="32px" />
 						<p>Notes</p>
 					</div>
-				</a> <a href="./Label.jsp">
+				</a>
+
+				<%
+				if (type.equals("teacher")) {
+					List<String> subs = dao.getSubjects(uname);
+					for (String sub : subs) {
+				%>
+
+				<a href="search?subname=<%=sub%>">
+					<div class="sub-section menu-section">
+						<img
+							src="./resources/letters/<%=sub.toLowerCase().charAt(0)%>.png"
+							height="32px" width="32px" />
+						<p><%=sub%></p>
+					</div>
+				</a>
+
+				<%
+				}
+				}
+				%>
+
+				<a href="./Label.jsp">
 					<div class="section2 menu-section">
-						<img src="./resources/tag.svg" alt="Notes" height="48px"
+						<img src="./resources/folder-plus.svg" alt="Notes" height="48px"
 							width="24px" />
 						<p>Label</p>
 					</div>
 				</a>
-			<%
+				<%
 				for (String list : lists) {
-					if(list.equals(label)){
-		    %>
-			<a href="search?label=<%= list%>"><div class="section2 menu-section" style="background-color: #feefc3">
-				<img src="./resources/tag.svg" alt="Notes" height="48px"
-					width="24px">
-				<p><%= list%></p>
-			</div></a>
-		<%
+					if (list.equals(label)) {
+				%>
+				<a href="search?label=<%=list%>"><div
+						class="section2 menu-section" style="background-color: #feefc3">
+						<img src="./resources/folder2.svg" alt="Notes" height="48px"
+							width="24px">
+						<p><%=list%></p>
+					</div></a>
+				<%
 				} else {
 				%>
-				<a href="search?label=<%= list%>"><div class="section2 menu-section">
-				<img src="./resources/tag.svg" alt="Notes" height="48px"
-					width="24px">
-				<p><%= list%></p>
-			</div></a>				
-			<% }
-					}%>
+				<a href="search?label=<%=list%>"><div
+						class="section2 menu-section">
+						<img src="./resources/folder2.svg" alt="Notes" height="48px"
+							width="24px">
+						<p><%=list%></p>
+					</div></a>
+				<%
+				}
+				}
+				%>
 				<a href="./Archive.jsp"><div class="section3 menu-section">
 						<img src="./resources/archive.svg" alt="Notes" height="48px"
 							width="24px" />
 						<p>Archive</p>
 					</div></a>
 			</div>
-			<div class="col-lg-10">
+			<div class="col-lg-9">
 				<div class="container">
 					<div class="row">
 						<div class="col-xxl-12 filter-section">
@@ -156,14 +189,13 @@
 						for (Note note : unotes) {
 							Integer nid = (Integer) note.getId();
 						%>
-						<div class="col-lg-3 note">
+						<div class="col-lg-4 note">
 							<a href="UNote.jsp?username=<%=uname%>&nid=<%=nid.toString()%>"><div
 									class="pinlogo">
 									<form action="pinNote?username=<%=uname%>" method="post">
-										<input type="hidden" name="title"
-											value="<%=note.getTitle()%>"> <input type="hidden"
-											name="nid" value="<%=note.getId()%>"> <input
-											type="hidden" name="action" value="unpin">
+										<input type="hidden" name="title" value="<%=note.getTitle()%>">
+										<input type="hidden" name="nid" value="<%=note.getId()%>">
+										<input type="hidden" name="action" value="unpin">
 										<button type="submit" class="notebutton">
 											<img src="./resources/pin-angle-fill.svg" height="20px"
 												width="20px" />
@@ -246,15 +278,15 @@
 								if (note.getWeightage().equals("High")) {
 								%>
 								<div class="bookmark">
-									<img src="./resources/bookmark-star.svg" alt="" height="25px"
-										width="25px">
+									<img src="./resources/asterisk.svg" alt="" height="16px"
+										width="16px">
 								</div>
 								<%
 								} else if (note.getWeightage().equals("Moderate")) {
 								%>
 								<div class="bookmark">
-									<img src="./resources/bookmark-check.svg" alt="" height="25px"
-										width="25px">
+									<img src="./resources/check2-all.svg" alt="" height="20px"
+										width="20px">
 								</div>
 								<%
 								} else {
@@ -270,9 +302,9 @@
 									<form method="post" action="pin">
 										<input type="hidden" name="userName" value="<%=uname%>">
 										<input type="hidden" name="fileName"
-											value="<%=note.getFileName()%>"> <input
-											type="hidden" name="label" value="<%=label%>"> <input
-											type="hidden" name="action" value="unpinlabelfromLabel">
+											value="<%=note.getFileName()%>"> <input type="hidden"
+											name="label" value="<%=label%>"> <input type="hidden"
+											name="action" value="unpinlabelfromLabel">
 										<button type="submit" class="notebutton">
 											<img src="./resources/pin-angle-fill.svg" height="20px"
 												width="20px" />
@@ -343,15 +375,15 @@
 								if (prac.getWeightage().equals("High")) {
 								%>
 								<div class="bookmark">
-									<img src="./resources/bookmark-star.svg" alt="" height="25px"
-										width="25px">
+									<img src="./resources/asterisk.svg" alt="" height="16px"
+										width="16px">
 								</div>
 								<%
 								} else if (prac.getWeightage().equals("Moderate")) {
 								%>
 								<div class="bookmark">
-									<img src="./resources/bookmark-check.svg" alt="" height="25px"
-										width="25px">
+									<img src="./resources/check2-all.svg" alt="" height="20px"
+										width="20px">
 								</div>
 								<%
 								} else {
@@ -369,9 +401,9 @@
 									<form method="post" action="pin">
 										<input type="hidden" name="userName" value="<%=uname%>">
 										<input type="hidden" name="fileName"
-											value="<%=prac.getFileName()%>"> <input
-											type="hidden" name="label" value="<%=label%>"> <input
-											type="hidden" name="action" value="unpinlabelfromLabel">
+											value="<%=prac.getFileName()%>"> <input type="hidden"
+											name="label" value="<%=label%>"> <input type="hidden"
+											name="action" value="unpinlabelfromLabel">
 										<button type="submit" class="notebutton">
 											<img src="./resources/pin-angle-fill.svg" height="20px"
 												width="20px" />
@@ -442,9 +474,9 @@
 									<form method="post" action="pin">
 										<input type="hidden" name="userName" value="<%=uname%>">
 										<input type="hidden" name="fileName"
-											value="<%=book.getFileName()%>"> <input
-											type="hidden" name="label" value="<%=label%>"> <input
-											type="hidden" name="action" value="unpinlabelfromLabel">
+											value="<%=book.getFileName()%>"> <input type="hidden"
+											name="label" value="<%=label%>"> <input type="hidden"
+											name="action" value="unpinlabelfromLabel">
 										<button type="submit" class="notebutton">
 											<img src="./resources/pin-angle-fill.svg" height="20px"
 												width="20px" />
@@ -511,4 +543,3 @@
 			crossorigin="anonymous"></script>
 </body>
 </html>
-			

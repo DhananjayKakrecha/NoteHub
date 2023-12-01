@@ -36,7 +36,7 @@ public class LabelServlet extends HttpServlet {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("Label.jsp");
 			dispatcher.forward(request, response);
 		}else {
-			response.sendRedirect("Error.jsp");
+			response.sendRedirect("LabelError.jsp");
 		}
 	}
 

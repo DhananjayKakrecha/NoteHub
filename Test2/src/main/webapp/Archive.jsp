@@ -20,6 +20,11 @@
 	rel="stylesheet"
 	integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
 	crossorigin="anonymous" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+	href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap"
+	rel="stylesheet">
 <link rel="stylesheet" href="./style.css" />
 <link rel="stylesheet" href="./stylesnotes.css" />
 </head>
@@ -28,6 +33,10 @@
 	String uname = (String) request.getSession().getAttribute("username");
 	uname.strip();
 
+	String type = (String) request.getSession().getAttribute("type");
+	type.strip();
+
+	
 	NotesDAO dao = new NotesDAO();
 	List<Notes> notes = dao.getPinnedNotes(uname);
 	List<String> lists = dao.getLabels(uname);
@@ -44,7 +53,9 @@
 		<div class="contianer-fluid nav-bar">
 			<div class="row nav-row">
 				<div class="col-lg-2 col-md-2 nav-logo">
-					<div class="logo"></div>
+					<div class="logo">
+						<img src="./resources/NoteHubIcon1.png" alt="" height="38px">
+					</div>
 					<p>NoteHub</p>
 				</div>
 				<div class="col-lg-6 col-md-10 search-bar">
@@ -61,7 +72,9 @@
 					</form>
 				</div>
 				<div class="col-lg-3 nav-items">
-					<button type="button" class="btn btn-warning">Inbox</button>
+					<button type="button" class="btn btn-warning">
+						<a href="./Inbox.jsp">Inbox</a>
+					</button>
 					<div class="dropdown">
 						<button class="btn btn-warning dropdown-toggle" type="button"
 							data-bs-toggle="dropdown" aria-expanded="false">Class</button>
@@ -71,23 +84,46 @@
 							<li><a class="dropdown-item" href="#">TY</a></li>
 						</ul>
 					</div>
-					<button type="button" class="btn btn-warning">Log Out</button>
+					<button type="button" class="btn btn-warning">
+						<a href="./Login.jsp">Log Out</a>
+					</button>
 				</div>
 			</div>
 		</div>
 	</header>
-	<div class="container-fluid">
+	<div class="container-fluid hero">
 		<div class="row">
-			<div class="col-lg-2">
-				<a href="search">
+			<div class="col-lg-3">
+				<a href="./NotesDetails.jsp">
 					<div class="section1 menu-section">
-						<img src="./resources/lightbulb.svg" alt="Notes" height="48px"
-							width="24px" />
+						<img src="./resources/icons8-idea-50.png" alt="Notes"
+							height="32px" width="32px" />
 						<p>Notes</p>
 					</div>
-				</a> <a href="./Label.jsp">
+				</a>
+				
+				<%
+				if (type.equals("teacher")) {
+					List<String> subs = dao.getSubjects(uname);
+					for (String sub : subs) {
+				%>
+
+				<a href="search?subname=<%=sub%>">
+					<div class="sub-section menu-section">
+						<img src="./resources/letters/<%= sub.toLowerCase().charAt(0)%>.png" height="32px"
+							width="32px" />
+						<p><%=sub%></p>
+					</div>
+				</a>
+
+				<%
+				}
+				}
+				%>
+				
+				 <a href="./Label.jsp">
 					<div class="section2 menu-section">
-						<img src="./resources/tag.svg" alt="Notes" height="48px"
+						<img src="./resources/folder-plus.svg" alt="Notes" height="48px"
 							width="24px" />
 						<p>Label</p>
 
@@ -98,7 +134,7 @@
 				%>
 				<a href="search?label=<%=list%>"><div
 						class="section2 menu-section">
-						<img src="./resources/tag.svg" alt="Notes" height="48px"
+						<img src="./resources/folder2.svg" alt="Notes" height="48px"
 							width="24px">
 						<p><%=list%></p>
 					</div></a>
@@ -122,7 +158,7 @@
 					<p>Moderate Weithage</p>
 				</div>
 			</div>
-			<div class="col-lg-10">
+			<div class="col-lg-9">
 				<div class="container">
 					<div class="row">
 						<div class="col-xxl-12 filter-section">
@@ -151,15 +187,15 @@
 								if (note.getWeightage().equals("High")) {
 								%>
 								<div class="bookmark">
-									<img src="./resources/bookmark-star.svg" alt="" height="25px"
-										width="25px">
+									<img src="./resources/asterisk.svg" alt="" height="16px"
+										width="16px">
 								</div>
 								<%
 								} else if (note.getWeightage().equals("Moderate")) {
 								%>
 								<div class="bookmark">
-									<img src="./resources/bookmark-check.svg" alt="" height="25px"
-										width="25px">
+									<img src="./resources/check2-all.svg" alt="" height="20px"
+										width="20px">
 								</div>
 								<%
 								} else {
@@ -175,7 +211,7 @@
 									<form method="post" action="pin">
 										<input type="hidden" name="userName" value="<%=uname%>">
 										<input type="hidden" name="fileName"
-											value="<%=note.getFileName()%>">  <input type="hidden"
+											value="<%=note.getFileName()%>"> <input type="hidden"
 											name="action" value="unpinfromarchive">
 										<button type="submit" class="notebutton">
 											<img src="./resources/pin-angle-fill.svg" height="20px"
@@ -406,6 +442,12 @@
 					</div>
 				</div>
 			</div>
+		</div>
+		<div class="add-note">
+			<button type="button" class="btn btn-warning notes-buttons">
+				<a href="./AddNote.jsp"><img src="./resources/plus-lg.svg"
+					alt=""></a>
+			</button>
 		</div>
 		<script
 			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"

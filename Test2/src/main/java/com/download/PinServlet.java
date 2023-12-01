@@ -13,11 +13,13 @@ public class PinServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private NotesDAO dao;
 	private PracticalsDAO pracDao;
+	private BooksDAO bookDao;
 
 	@Override
 	public void init() throws ServletException {
 		dao = new NotesDAO();
 		pracDao = new PracticalsDAO();
+		bookDao = new BooksDAO();
 		super.init();
 	}
 
@@ -97,6 +99,22 @@ public class PinServlet extends HttpServlet {
 			case "unpinlabelfromfilterlabel":
 				result = dao.unPinLabelNote(uname, label, fileName);
 				response.sendRedirect("Batmann.jsp");
+				break;
+//			For Teachers Notes Deletion:
+			case "delnotefromsub":
+				int notesId = Integer.parseInt(request.getParameter("notesId"));
+				result = dao.delNotes(notesId);
+				response.sendRedirect("Subject.jsp");
+				break;
+			case "delpracfromsub":
+				int pid = Integer.parseInt(request.getParameter("pid"));
+				result = pracDao.delPrac(pid);
+				response.sendRedirect("Subject.jsp");
+				break;
+			case "delbookfromsub":
+				int bid = Integer.parseInt(request.getParameter("bid"));
+				result = bookDao.delBook(bid);
+				response.sendRedirect("Subject.jsp");
 				break;
 			}
 

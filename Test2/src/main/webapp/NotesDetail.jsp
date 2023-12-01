@@ -14,6 +14,11 @@
 	rel="stylesheet"
 	integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
 	crossorigin="anonymous" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+	href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap"
+	rel="stylesheet">
 <link rel="stylesheet" href="./style.css" />
 <link rel="stylesheet" href="./stylenote.css" />
 </head>
@@ -22,6 +27,9 @@
 	String username = (String) request.getSession().getAttribute("username");
 	String filter = (String) request.getSession().getAttribute("filter");
 
+	String type = (String) request.getSession().getAttribute("type");
+	type.strip();
+	
 	NotesDAO dao = new NotesDAO();
 	List<String> lists = dao.getLabels(username);
 	boolean isLabelListEmpty = lists.isEmpty();
@@ -33,7 +41,9 @@
 		<div class="contianer-fluid nav-bar">
 			<div class="row nav-row">
 				<div class="col-lg-2 col-md-2 nav-logo">
-					<div class="logo"></div>
+					<div class="logo">
+						<img src="./resources/NoteHubIcon1.png" alt="" height="38px">
+					</div>
 					<p>NoteHub</p>
 				</div>
 				<div class="col-lg-6 col-md-10 search-bar">
@@ -71,17 +81,39 @@
 	</header>
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-lg-2">
+			<div class="col-lg-3">
 				<a href="./NotesDetails.jsp">
 					<div class="section1 menu-section"
 						style="background-color: #feefc3">
-						<img src="./resources/lightbulb.svg" alt="Notes" height="48px"
-							width="24px" />
+						<img src="./resources/icons8-idea-50.png" alt="Notes" height="32px"
+							width="32px" />
 						<p>Notes</p>
 					</div>
-				</a> <a href="./Label.jsp">
+				</a>
+				
+				<%
+				if (type.equals("teacher")) {
+					List<String> subs = dao.getSubjects(username);
+					for (String sub : subs) {
+				%>
+
+				<a href="search?subname=<%=sub%>">
+					<div class="sub-section menu-section">
+						<img
+							src="./resources/letters/<%=sub.toLowerCase().charAt(0)%>.png"
+							height="32px" width="32px" />
+						<p><%=sub%></p>
+					</div>
+				</a>
+
+				<%
+				}
+				}
+				%>
+				
+				 <a href="./Label.jsp">
 					<div class="section2 menu-section">
-						<img src="./resources/tag.svg" alt="Notes" height="48px"
+						<img src="./resources/folder-plus.svg" alt="Notes" height="48px"
 							width="24px" />
 						<p>Label</p>
 
@@ -92,7 +124,7 @@
 				%>
 				<a href="search?label=<%=list%>"><div
 						class="section2 menu-section">
-						<img src="./resources/tag.svg" alt="Notes" height="48px"
+						<img src="./resources/folder2.svg" alt="Notes" height="48px"
 							width="24px">
 						<p><%=list%></p>
 					</div></a>
@@ -105,7 +137,7 @@
 						<p>Archive</p>
 					</div></a>
 			</div>
-			<div class="col-lg-10">
+			<div class="col-lg-9">
 				<div class="container">
 					<div class="row">
 						<div class="col-xxl-12 filter-section">
@@ -129,7 +161,7 @@
 						for (Note note : unotes) {
 							Integer nid = (Integer) note.getId();
 						%>
-						<div class="col-lg-3 note">
+						<div class="col-lg-4 note">
 							<a
 								href="UNote.jsp?username=<%=username%>&nid=<%=nid.toString()%>"><div
 									class="pinlogo">
@@ -219,7 +251,7 @@
 
 							if (!isPinned) {
 						%>
-						<div class="col-lg-3 note">
+						<div class="col-lg-4 note">
 							<a
 								href="UNote.jsp?username=<%=username%>&nid=<%=nid.toString()%>"><div
 									class="pinlogo">

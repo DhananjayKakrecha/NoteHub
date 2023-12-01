@@ -343,7 +343,7 @@ public class PracticalsDAO {
 		return pracs;
 	}
 	
-	public List<Practicals> getNotesFromSubject(String subname,String uname){
+	public List<Practicals> getPracticalsFromSubject(String subname,String uname){
 		List<Practicals> pracs = new ArrayList<>();
 		String query = "Select * from practicals where sub_name = ? and name = ?";
 		
@@ -370,6 +370,71 @@ public class PracticalsDAO {
 			connection.close();
 			preparedStatement.close();
 			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return pracs;
+	}
+	
+	public int delPrac(int pid) {
+		int result = 0;
+		String query = "delete from practicals where pid = ?";
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			Connection connection = DriverManager.getConnection(databaseUrl, username, password);
+	
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, pid);
+			
+			result = preparedStatement.executeUpdate();
+			
+			connection.close();
+			preparedStatement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	public Practicals getpracsById(int pid){
+		Practicals pracs = new Practicals();
+		String query = "Select * from practicals where pid = ?";
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			Connection connection = DriverManager.getConnection(databaseUrl, username, password);
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, pid);
+			
+			ResultSet rs = preparedStatement.executeQuery();
+			rs.next();
+			
+			pracs.setPid(rs.getInt("pid"));
+			pracs.setFileName(rs.getString("file_name"));
+			pracs.setName(rs.getString("name"));
+			pracs.setSubName(rs.getString("sub_name"));
+			pracs.setTopic(rs.getString("topic"));
+			pracs.setUnit(rs.getString("unit"));
+			pracs.setWeightage(rs.getString("weightage"));
+			
+			
+			connection.close();
+			preparedStatement.close();
+			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -25,9 +25,16 @@ public class RegisterUserServlet extends HttpServlet {
 		String password = request.getParameter("password");
 		String fullName = request.getParameter("fullname");
 		String email = request.getParameter("email");
-		String type = "user";
+		String type = "student";
+		boolean action = true;
 
-		if(!dao.checkUsername(username)) {
+		if (username.toLowerCase().equals("notes") || username.toLowerCase().equals("note")
+				|| username.toLowerCase().equals("practicals") || username.toLowerCase().equals("books")
+				|| username.toLowerCase().equals("sharednotes") || username.toLowerCase().equals("labels")) {
+			action = false;
+		}
+
+		if (!dao.checkUsername(username) && action) {
 			// Create a new Registration object
 			Registration registration = new Registration(username, password, fullName, email, type);
 
@@ -35,15 +42,14 @@ public class RegisterUserServlet extends HttpServlet {
 			dao.saveRegistration(registration);
 			boolean result = dao.generateUser(username);
 			System.out.println(result);
-			if(!result) {
+			if (!result) {
 				RequestDispatcher dispatcher = request.getRequestDispatcher("Login.jsp");
 				dispatcher.forward(request, response);
 			}
-		}else {
+		} else {
 			response.sendRedirect("Error.jsp");
 		}
-		
-		
+
 	}
 
 }

@@ -670,7 +670,6 @@ public class NotesDAO {
 			ResultSet resultSet = preparedStatement.executeQuery();
 
 			while (resultSet.next()) {
-				System.out.println(resultSet.getString("sub_name"));
 				if(!subs.contains(resultSet.getString("sub_name"))) {
 					subs.add(resultSet.getString("sub_name"));
 				}
@@ -765,7 +764,6 @@ public class NotesDAO {
 		List<String> bsubs = getBooksSubjects(uname);
 		
 		for(String nsub : nsubs) {
-			System.out.println(nsub);
 			if(!subs.contains(nsub)) {
 				subs.add(nsub);
 			}
@@ -818,5 +816,110 @@ public class NotesDAO {
 		}
 		
 		return notes;
+	}
+	
+	public int delNotes(int notesId) {
+		int result = 0;
+		String query = "delete from notes where notesId = ?";
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			Connection connection = DriverManager.getConnection(databaseUrl, username, password);
+	
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, notesId);
+			
+			result = preparedStatement.executeUpdate();
+			
+			connection.close();
+			preparedStatement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	public Notes getNotesById(int notesId){
+		Notes notes = new Notes();
+		String query = "Select * from notes where notesId = ?";
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			Connection connection = DriverManager.getConnection(databaseUrl, username, password);
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, notesId);
+			
+			ResultSet rs = preparedStatement.executeQuery();
+			rs.next();
+			
+			notes.setNid(rs.getInt("notesId"));
+			notes.setFileName(rs.getString("file_name"));
+			notes.setName(rs.getString("name"));
+			notes.setSubName(rs.getString("sub_name"));
+			notes.setTopic(rs.getString("topic"));
+			notes.setUnit(rs.getString("unit"));
+			notes.setWeightage(rs.getString("weightage"));
+			
+			
+			connection.close();
+			preparedStatement.close();
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return notes;
+	}
+	
+	public int updateUploadNote(int id,String topic, String unit, String weightage, String notetype, String subject) {
+		int result = 0;
+		String sid = "";
+		if(notetype.equals("Notes")) {
+			sid = "notesId";
+		}else if(notetype.equals("Practicals")) {
+			sid = "pid";
+		}else if(notetype.equals("Books")) {
+			sid = "bid";
+		}
+		String query = "Update "+notetype+" set topic = ?,sub_name = ?,unit = ?,weightage = ? where "+sid+ " = ?";
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			Connection connection = DriverManager.getConnection(databaseUrl, username, password);
+	
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, topic);
+			preparedStatement.setString(2, subject);
+			preparedStatement.setString(3, unit);
+			preparedStatement.setString(4, weightage);
+			preparedStatement.setInt(5, id);
+			
+			result = preparedStatement.executeUpdate();
+			
+			connection.close();
+			preparedStatement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 }

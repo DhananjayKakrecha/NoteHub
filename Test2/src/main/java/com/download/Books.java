@@ -4,7 +4,35 @@ public class Books {
 	private String name;
 	private String fileName;
 	private String subName;
+	private String unit;
+	private String weightage;
+	private String topic;
 	private int bid;
+
+	
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	public String getWeightage() {
+		return weightage;
+	}
+
+	public void setWeightage(String weightage) {
+		this.weightage = weightage;
+	}
+
+	public String getTopic() {
+		return topic;
+	}
+
+	public void setTopic(String topic) {
+		this.topic = topic;
+	}
 
 	public String getName() {
 		return name;
@@ -37,6 +65,5 @@ public class Books {
 	public void setBid(int bid) {
 		this.bid = bid;
 	}
-	
 
 }

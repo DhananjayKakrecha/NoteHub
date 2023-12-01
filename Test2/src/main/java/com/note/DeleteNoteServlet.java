@@ -27,11 +27,11 @@ public class DeleteNoteServlet extends HttpServlet {
 		if(action.equals("note") && type.equals("teacher")) {
 			int result = dao.deleteNote(nid);
 			int vcNotesdel = dao.deleteVCNotes(nid, uname);
-			response.sendRedirect("Teachers.jsp");
+			response.sendRedirect("NotesDetails.jsp");
 		}else if(action.equals("vcnote")  && type.equals("teacher")) {
 			int vid = Integer.parseInt(request.getParameter("vid"));
 			int vcNoteDel = dao.deleteVCNote(vid, uname);
-			response.sendRedirect("Teachers.jsp");
+			response.sendRedirect("NotesDetails.jsp");
 		} else if(action.equals("note") && type.equals("student")) {
 			int result = dao.deleteNote(nid);
 			int vcNotesdel = dao.deleteVCNotes(nid, uname);

@@ -307,7 +307,7 @@ public class BooksDAO {
 		return books;
 	}
 	
-	public List<Books> getNotesFromSubject(String subname,String uname){
+	public List<Books> getBooksFromSubject(String subname,String uname){
 		List<Books> books = new ArrayList<>();
 		String query = "Select * from books where sub_name = ? and name = ?";
 		
@@ -334,6 +334,70 @@ public class BooksDAO {
 			connection.close();
 			preparedStatement.close();
 			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return books;
+	}
+	
+	public int delBook(int bid) {
+		int result = 0;
+		String query = "delete from books where bid = ?";
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			Connection connection = DriverManager.getConnection(databaseUrl, username, password);
+	
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, bid);
+			
+			result = preparedStatement.executeUpdate();
+			
+			connection.close();
+			preparedStatement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	public Books getbooksById(int bid){
+		Books books = new Books();
+		String query = "Select * from Books where bid = ?";
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			Connection connection = DriverManager.getConnection(databaseUrl, username, password);
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, bid);
+			
+			ResultSet rs = preparedStatement.executeQuery();
+			rs.next();
+			
+			books.setBid(rs.getInt("pid"));
+			books.setFileName(rs.getString("file_name"));
+			books.setName(rs.getString("name"));
+			books.setSubName(rs.getString("sub_name"));
+			books.setTopic(rs.getString("topic"));
+			books.setWeightage(rs.getString("weightage"));
+			books.setUnit(rs.getString("unit"));
+			
+			connection.close();
+			preparedStatement.close();
+			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
